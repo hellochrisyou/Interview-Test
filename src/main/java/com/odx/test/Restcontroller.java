@@ -75,7 +75,7 @@ public class Restcontroller {
 	    repo.saveAll(thisRepo);
     }
 	
-	//Http Get Methods will be navigated to this request handler from the Dispatcher Servlet (Front controller).
+	// Http Get Methods will be navigated to this request handler from the Dispatcher Servlet (Front controller).
 	@RequestMapping(method = RequestMethod.GET,
             value = "/",
             produces = MediaType.APPLICATION_JSON_VALUE)
