@@ -32,6 +32,7 @@ public class Restcontroller {
 		// Beginning and end indices of longest Palindromic substring.
 	    int maxLen = 1, begin = 0;
 	    // Two outer loops pick all sub strings starting from corner to corner.
+	    // 2nd for loop increases the substring from the root index (i) until the end of the string. Then the root index increases by 1 until it reaches the end.
 		for (int i = 0; i < str.length(); i++) {
 	        for (int j = i; j < str.length(); j++) {
 	            boolean isPalindrome = true;
