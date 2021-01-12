@@ -16,8 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class Restcontroller {
 	
+	// The Spring framework enables automatic dependency injection via @Autowiring
 	@Autowired
 	private Repository repo;
+	
+	// Http Post Methods will be navigated to this request handler from the Dispatcher Servlet (Front controller)
 	@RequestMapping(method = RequestMethod.POST,
                     value = "/",
                     produces = MediaType.APPLICATION_JSON_VALUE)
@@ -43,30 +46,38 @@ public class Restcontroller {
 	            }
 	        }
 		}
+		// Use String Builder to extract substring from string
 		StringBuilder sb = new StringBuilder();
 	    for (int i = begin; i <= begin + maxLen -1; ++i) {		        
 	    	sb.append(str.charAt(i));
 	    }
+	    // Retrieve existing repository List Object (if it exists)
 	    List<DemoEntity> thisRepo = (List<DemoEntity>) repo.findAll();
+	    // If the repository is empty then create a new object and add it to the Repository List
 	    if (thisRepo.size() == 0) {
 	    	DemoEntity tmpEntity = new DemoEntity(sb.toString());
 	    	tmpEntity.setName(sb.toString());
 	    	thisRepo.add(tmpEntity);
 	    }
+	    // Otherwise, iterate through the list (there should be no more than one element)) and set the name field/column to the acquired palindromic substring
 	    else {
-		    for (DemoEntity tmp: thisRepo) {	
+		    for (DemoEntity tmp: thisRepo) {		
 		    	tmp.setName(sb.toString());
 		    }
 	    }
+	    // Print out the string for testing
 	    System.out.print(sb.toString());
+	    // Persist data into the database via Repository save function
 	    repo.saveAll(thisRepo);
     }
-		  
+	
+	// Http Get Methods will be navigated to this request handler from the Dispatcher Servlet (Front controller)
 	@RequestMapping(method = RequestMethod.GET,
             value = "/",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public String returnLongestPalindrome() {
 		 List<DemoEntity> tmpEntity = (List<DemoEntity>) repo.findAll();
+		 // List either has one or no elements.  If the list is empty, it will return null.
 		 for (DemoEntity tmp: tmpEntity) {
 			 return tmp.getName();
 		 }
