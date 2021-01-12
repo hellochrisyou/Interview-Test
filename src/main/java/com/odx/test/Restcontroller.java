@@ -13,27 +13,31 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+// Decorator that annotates this class as a controller component.  The controller performs business logic which can be relayed in a service layer as well.
+// Includes @Controller and @ResponseBody annotation.
+// This annotation is applied to a class to mark it as a request handler. 
+// Spring RestController annotation is used to create RESTful web services using Spring MVC.
 @RestController
 public class Restcontroller {
 	
-	// The Spring framework enables automatic dependency injection via @Autowiring
+	// The Spring framework enables automatic dependency injection via @Autowiring.
 	@Autowired
 	private Repository repo;
 	
-	// Http Post Methods will be navigated to this request handler from the Dispatcher Servlet (Front controller)
+	// Http Post Methods will be navigated to this request handler from the Dispatcher Servlet (Front controller).
 	@RequestMapping(method = RequestMethod.POST,
                     value = "/",
                     produces = MediaType.APPLICATION_JSON_VALUE)
     public void receiveString(@RequestBody String str) {
-		// Beginning and end indices of longest Palindromic substring
+		// Beginning and end indices of longest Palindromic substring.
 	    int maxLen = 1, begin = 0;
-	    // Two outer loops pick all sub strings starting from corner to corner
+	    // Two outer loops pick all sub strings starting from corner to corner.
 		for (int i = 0; i < str.length(); i++) {
 	        for (int j = i; j < str.length(); j++) {
 	            boolean isPalindrome = true;
-	            // Inner loop check Palindrome
-	            // "k<(j-i+1)/2" represents the inner loop iterating half the size of the array
-	            // "(i+k)" and "(j-k)" represent the inner loop growing and shrinking the substring while validating if it is a Palindrome
+	            // Inner loop check Palindrome.
+	            // "k<(j-i+1)/2" represents the inner loop iterating half the size of the array.
+	            // "(i+k)" and "(j-k)" represent the inner loop growing and shrinking the substring while validating if it is a Palindrome.
 	            for (int k = 0; k < (j - i + 1) / 2; k++)
 	                if (str.charAt(i + k) != str.charAt(j - k))
 	                    isPalindrome = false;
@@ -46,20 +50,20 @@ public class Restcontroller {
 	            }
 	        }
 		}
-		// Use String Builder to extract substring from string
+		// Use String Builder to extract substring from string.
 		StringBuilder sb = new StringBuilder();
 	    for (int i = begin; i <= begin + maxLen -1; ++i) {		        
 	    	sb.append(str.charAt(i));
 	    }
-	    // Retrieve existing repository List Object (if it exists)
+	    // Retrieve existing repository List Object (if it exists).
 	    List<DemoEntity> thisRepo = (List<DemoEntity>) repo.findAll();
-	    // If the repository is empty then create a new object and add it to the Repository List
+	    // If the repository is empty then create a new object and add it to the Repository List.
 	    if (thisRepo.size() == 0) {
 	    	DemoEntity tmpEntity = new DemoEntity(sb.toString());
 	    	tmpEntity.setName(sb.toString());
 	    	thisRepo.add(tmpEntity);
 	    }
-	    // Otherwise, iterate through the list (there should be no more than one element)) and set the name field/column to the acquired palindromic substring
+	    // Otherwise, iterate through the list (there should be no more than one element)) and set the name field/column to the acquired palindromic substring.
 	    else {
 		    for (DemoEntity tmp: thisRepo) {		
 		    	tmp.setName(sb.toString());
@@ -67,11 +71,11 @@ public class Restcontroller {
 	    }
 	    // Print out the string for testing
 	    System.out.print(sb.toString());
-	    // Persist data into the database via Repository save function
+	    // Persist data into the database via Repository save function.
 	    repo.saveAll(thisRepo);
     }
 	
-	// Http Get Methods will be navigated to this request handler from the Dispatcher Servlet (Front controller)
+	//Http Get Methods will be navigated to this request handler from the Dispatcher Servlet (Front controller).
 	@RequestMapping(method = RequestMethod.GET,
             value = "/",
             produces = MediaType.APPLICATION_JSON_VALUE)
